@@ -23,14 +23,14 @@ struct player_list
 	float head_bone[3];//头骨位置
 	int camp;//阵营
 	int blood;//血量
-	int armor;//铠甲
-	bool helmet;//头盔
+	//int armor;//铠甲
+	//bool helmet;//头盔
 	bool mirror;//是否开镜
-	int money;//金钱
-	float recoil;//后座力
-	bool immunity;//买枪状态
+	//int money;//金钱
+	//float recoil;//后座力
+	//bool immunity;//买枪状态
 	int shot;//是否开枪
-	float flash;//闪光度
+	//float flash;//闪光度
 	float squat;//是否下蹲
 	float jump;//是否跳跃
 };
@@ -111,34 +111,44 @@ void get_player_list(struct player_list* players)
 	{
 		int player_base_address;
 		read_memory(process, (g_players_address + i * 0x10), &player_base_address, sizeof(int));
+#ifdef DEBUG_STRING
+		
+		if (player_base_address) {
+			
+			printf("player_base_address: %d\n", player_base_address);
+
+		}
+#endif
 		if (player_base_address == 0) continue;
 
-		read_memory(process, player_base_address + 0x100, &players[i].blood, sizeof(int));
+		read_memory(process, player_base_address + 0xE4, &players[i].blood, sizeof(int));
 		if (players[i].blood <= 0) continue;
+
+
 
 		players[i].effective = true;
 		players[i].aimbot_len = 9999;
 
-		int bone_base_address;
-		if (read_memory(process, (player_base_address + 0x26A8), &bone_base_address, sizeof(int)))
-		{
-			read_memory(process, (bone_base_address + 99 * sizeof(float)), &players[i].head_bone[0], sizeof(float));
-			read_memory(process, (bone_base_address + 103 * sizeof(float)), &players[i].head_bone[1], sizeof(float));
-			read_memory(process, (bone_base_address + 107 * sizeof(float)), &players[i].head_bone[2], sizeof(float));
-		}
+		//int bone_base_address;
+		//if (read_memory(process, (player_base_address + 0x26A8), &bone_base_address, sizeof(int)))
+		//{
+		//	read_memory(process, (bone_base_address + 99 * sizeof(float)), &players[i].head_bone[0], sizeof(float));
+		//	read_memory(process, (bone_base_address + 103 * sizeof(float)), &players[i].head_bone[1], sizeof(float));
+		//	read_memory(process, (bone_base_address + 107 * sizeof(float)), &players[i].head_bone[2], sizeof(float));
+		//}
 
-		read_memory(process, player_base_address + 0x138, players[i].location, sizeof(players[i].location));
-		read_memory(process, player_base_address + 0xF4, &players[i].camp, sizeof(int));
-		read_memory(process, player_base_address + 0xB368, &players[i].armor, sizeof(int));
-		read_memory(process, player_base_address + 0xB35C, &players[i].helmet, sizeof(bool));
-		read_memory(process, player_base_address + 0x3914, &players[i].mirror, sizeof(bool));
-		read_memory(process, player_base_address + 0xB358, &players[i].money, sizeof(int));
-		read_memory(process, player_base_address + 0x302C, &players[i].recoil, sizeof(float));
-		read_memory(process, player_base_address + 0x3930, &players[i].immunity, sizeof(bool));
-		read_memory(process, player_base_address + 0xA380, &players[i].shot, sizeof(int));
-		read_memory(process, player_base_address + 0xA40C, &players[i].flash, sizeof(float));
-		read_memory(process, player_base_address + 0x110, &players[i].squat, sizeof(float));
-		read_memory(process, player_base_address + 0x11C, &players[i].jump, sizeof(float));
+		read_memory(process, player_base_address + 0x280, players[i].location, sizeof(players[i].location));
+		read_memory(process, player_base_address + 0x1F4, &players[i].camp, sizeof(int));
+		//read_memory(process, player_base_address + 0xB368, &players[i].armor, sizeof(int));
+		//read_memory(process, player_base_address + 0xB35C, &players[i].helmet, sizeof(bool));
+		//read_memory(process, player_base_address + 0x3914, &players[i].mirror, sizeof(bool));
+		//read_memory(process, player_base_address + 0xB358, &players[i].money, sizeof(int));
+		//read_memory(process, player_base_address + 0x302C, &players[i].recoil, sizeof(float));
+		//read_memory(process, player_base_address + 0x3930, &players[i].immunity, sizeof(bool));
+		//read_memory(process, player_base_address + 0xA380, &players[i].shot, sizeof(int));
+		//read_memory(process, player_base_address + 0xA40C, &players[i].flash, sizeof(float));
+		/*read_memory(process, player_base_address + 0x110, &players[i].squat, sizeof(float));
+		read_memory(process, player_base_address + 0x11C, &players[i].jump, sizeof(float));*/
 	}
 }
 
@@ -154,7 +164,7 @@ void get_self_location(float* location)
 	int location_base_address;
 	read_memory(g_process_handle, g_self_address, &location_base_address, sizeof(int));
 	if (location_base_address)
-		read_memory(g_process_handle, location_base_address + 0x35A8, location, sizeof(float) * 3);
+		read_memory(g_process_handle, location_base_address + 0x280, location, sizeof(float) * 3);
 }
 
 //设置自己阵营
@@ -186,13 +196,13 @@ int get_self_camp(player_list* players)
 	return 2;
 }
 
-//获取自己开枪状态
-bool get_shot_state(player_list* players)
-{
-	for (int i = 0; i < g_players_count; i++)
-		if (players[i].effective && players[i].self) return players[i].shot;
-	return false;
-}
+////获取自己开枪状态
+//bool get_shot_state(player_list* players)
+//{
+//	for (int i = 0; i < g_players_count; i++)
+//		if (players[i].effective && players[i].self) return players[i].shot;
+//	return false;
+//}
 
 //初始化地址信息
 void initialize_address(const char* process_name)
@@ -203,14 +213,17 @@ void initialize_address(const char* process_name)
 	g_process_handle = process_handle;
 
 	struct module_information engine_module;
-	struct module_information client_panorama_module;
-	get_module_info(process_handle, process_id, "engine.dll", engine_module);
-	get_module_info(process_handle, process_id, "client_panorama.dll", client_panorama_module);
+	struct module_information client_module;
+	struct module_information server_module;
 
-	int matrix_address = find_pattern(process_handle, client_panorama_module, "\x80\xBF??\xE0\xC0\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x80\xBF", 1) + 0x16;
-	int angle_address = find_pattern(process_handle, engine_module, "\x70\x9D??\x70\x37??\x50???\x01\x00\x00\x00\x70\x9D??\x70\x9D", 0, 0x580000) + 0x40;
-	int self_address = find_pattern(process_handle, client_panorama_module, "\xFC??\x01\x00\x00\x00?\xE3??????\x08\x20\x08\x00?????\xFB", 0, 0xD2F000) + 0x57;
-	int players_address = find_pattern(process_handle, client_panorama_module, "\x40???????\x00\x00\x00\x00\x00\x00\x00\x05\x00\x00\x00?\x00\x00\x00\xFF\xFF\xFF\xFF", 0, 0x4D40000) + 0x9B;
+	get_module_info(process_handle, process_id, "engine.dll", engine_module);
+	get_module_info(process_handle, process_id, "client.dll", client_module);
+	get_module_info(process_handle, process_id, "server.dll", server_module);
+
+	int matrix_address = engine_module.module_address + 0x5A78EC;
+	int angle_address = engine_module.module_address+0x4791B4;
+	int self_address = server_module.module_address+0x4F3FEC;
+	int players_address = server_module.module_address + 0x4F3FFC;
 	//show_all_pattern(process_handle, client_panorama_module, "\xFC??\x01\x00\x00\x00?\xE3??????\x08\x20\x08\x00?????\xFB",0xD2F000);
 
 #ifdef DEBUG_STRING
@@ -283,89 +296,89 @@ void render_player_box(player_list* players)
 }
 
 //获取后座力
-float get_recoil(player_list* player)
-{
-	for (int i = 0; i < g_players_count; i++)
-		if (player[i].effective && player[i].self) player[i].recoil *= 1.9f;
-	return 0.0f;
-}
+//float get_recoil(player_list* player)
+//{
+//	for (int i = 0; i < g_players_count; i++)
+//		if (player[i].effective && player[i].self) player[i].recoil *= 1.9f;
+//	return 0.0f;
+//}
 
-//获取当前角度
-void get_current_angle(float* angle)
-{
-	int angle_base_address;
-	if (read_memory(g_process_handle, g_angle_address, &angle_base_address, sizeof(int)))
-		read_memory(g_process_handle, angle_base_address + 0x4D88, angle, sizeof(float) * 2);
-}
+////获取当前角度
+//void get_current_angle(float* angle)
+//{
+//	int angle_base_address;
+//	if (read_memory(g_process_handle, g_angle_address, &angle_base_address, sizeof(int)))
+//		read_memory(g_process_handle, angle_base_address + 0x4D88, angle, sizeof(float) * 2);
+//}
+//
+////设置当前角度
+//void set_current_angle(float* angle)
+//{
+//	int angle_base_address;
+//	if (read_memory(g_process_handle, g_angle_address, &angle_base_address, sizeof(int)))
+//		write_memory(g_process_handle, angle_base_address + 0x4D88, angle, sizeof(float) * 2);
+//}
 
-//设置当前角度
-void set_current_angle(float* angle)
-{
-	int angle_base_address;
-	if (read_memory(g_process_handle, g_angle_address, &angle_base_address, sizeof(int)))
-		write_memory(g_process_handle, angle_base_address + 0x4D88, angle, sizeof(float) * 2);
-}
-
-//获取自瞄角度
-void get_aimbot_angle(float* self_location, float* player_location, float* aim_angle, bool squat, float recoil)
-{
-	float x = self_location[0] - player_location[0];
-	float y = self_location[1] - player_location[1];
-	float z = self_location[2] - player_location[2] + 65.0f;
-	if (squat) z -= 15.0f;
-	z += recoil;
-
-	const float pi = 3.1415f;
-	aim_angle[0] = (float)atan(z / sqrt(x * x + y * y)) / pi * 180.f;
-	aim_angle[1] = (float)atan(y / x);
-
-	if (x >= 0.0f && y >= 0.0f) aim_angle[1] = aim_angle[1] / pi * 180.0f - 180.0f;
-	else if (x < 0.0f && y >= 0.0f) aim_angle[1] = aim_angle[1] / pi * 180.0f;
-	else if (x < 0.0f && y < 0.0f) aim_angle[1] = aim_angle[1] / pi * 180.0f;
-	else if (x >= 0.0f && y < 0.0f) aim_angle[1] = aim_angle[1] / pi * 180.f + 180.0f;
-}
-
-//获取最近的任务骨骼位置
-int get_recent_head_location(player_list* players, float* self_location)
-{
-	int index = -1;
-	int camp = get_self_camp(players);
-	for (int i = 0; i < g_players_count; i++)
-	{
-		if (players[i].effective && camp != players[i].camp)
-		{
-			if (index == -1) index = i;
-			else if (players[index].aimbot_len > players[i].aimbot_len) index = i;
-		}
-	}
-	return index;
-}
-
-//自瞄开启
-void aimbot_players(player_list* player, float max_fov = 30)
-{
-	if (get_jump_state(player) == true) return;
-
-	float self_location[3];
-	get_self_location(self_location);
-
-	int aim_index = get_recent_head_location(player, self_location);
-	if (aim_index == -1) return;
-
-	float current_angle[2];
-	get_current_angle(current_angle);
-
-	bool squat = get_squat_state(player);
-
-	float aim_angle[2];
-	get_aimbot_angle(self_location, player[aim_index].head_bone, aim_angle, squat, 0.0f);
-
-	if (abs((int)aim_angle[0] - (int)current_angle[0]) > max_fov
-		|| abs((int)aim_angle[1] - (int)current_angle[1]) > max_fov)
-		return;
-
-	set_current_angle(aim_angle);
-}
+////获取自瞄角度
+//void get_aimbot_angle(float* self_location, float* player_location, float* aim_angle, bool squat, float recoil)
+//{
+//	float x = self_location[0] - player_location[0];
+//	float y = self_location[1] - player_location[1];
+//	float z = self_location[2] - player_location[2] + 65.0f;
+//	if (squat) z -= 15.0f;
+//	z += recoil;
+//
+//	const float pi = 3.1415f;
+//	aim_angle[0] = (float)atan(z / sqrt(x * x + y * y)) / pi * 180.f;
+//	aim_angle[1] = (float)atan(y / x);
+//
+//	if (x >= 0.0f && y >= 0.0f) aim_angle[1] = aim_angle[1] / pi * 180.0f - 180.0f;
+//	else if (x < 0.0f && y >= 0.0f) aim_angle[1] = aim_angle[1] / pi * 180.0f;
+//	else if (x < 0.0f && y < 0.0f) aim_angle[1] = aim_angle[1] / pi * 180.0f;
+//	else if (x >= 0.0f && y < 0.0f) aim_angle[1] = aim_angle[1] / pi * 180.f + 180.0f;
+//}
+//
+////获取最近的人物骨骼位置
+//int get_recent_head_location(player_list* players, float* self_location)
+//{
+//	int index = -1;
+//	int camp = get_self_camp(players);
+//	for (int i = 0; i < g_players_count; i++)
+//	{
+//		if (players[i].effective && camp != players[i].camp)
+//		{
+//			if (index == -1) index = i;
+//			else if (players[index].aimbot_len > players[i].aimbot_len) index = i;
+//		}
+//	}
+//	return index;
+//}
+//
+////自瞄开启
+//void aimbot_players(player_list* player, float max_fov = 30)
+//{
+//	if (get_jump_state(player) == true) return;
+//
+//	float self_location[3];
+//	get_self_location(self_location);
+//
+//	int aim_index = get_recent_head_location(player, self_location);
+//	if (aim_index == -1) return;
+//
+//	float current_angle[2];
+//	get_current_angle(current_angle);
+//
+//	bool squat = get_squat_state(player);
+//
+//	float aim_angle[2];
+//	get_aimbot_angle(self_location, player[aim_index].head_bone, aim_angle, squat, 0.0f);
+//
+//	if (abs((int)aim_angle[0] - (int)current_angle[0]) > max_fov
+//		|| abs((int)aim_angle[1] - (int)current_angle[1]) > max_fov)
+//		return;
+//
+//	set_current_angle(aim_angle);
+//}
 
 //工作开始
 void cheats_doing()
@@ -378,18 +391,18 @@ void cheats_doing()
 
 	render_player_box(players);
 
-	if (get_mouse_left_down() || get_shot_state(players)) aimbot_players(players);
-	else if (get_open_mirror_state(players)) zaimbot_players(players);
+	//if (get_mouse_left_down() || get_shot_state(players)) aimbot_players(players);
+	//else if (get_open_mirror_state(players)) aimbot_players(players);
 }
 
 //开始操作
 void start_cheats_csgo()
 {
-	initialize_address("csgo.exe");
+	initialize_address("hl2.exe");
 
 	g_cheating = cheats_doing;
 
-	hwnd game_hwnd = FindWindowA(nullptr, "Counter-Strike: Global Offensive");
+	hwnd game_hwnd = FindWindowA("Valve001", "Counter-Strike Source");
 	hwnd transparent_hwnd = create_transparent_window(game_hwnd);
 	g_game_hwnd = game_hwnd;
 	g_transparent_hwnd = transparent_hwnd;

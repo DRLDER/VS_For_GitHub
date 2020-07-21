@@ -98,8 +98,8 @@ handle get_process_handle(dword process_id, dword access = PROCESS_ALL_ACCESS)
 	error(process_handle, "打开进程句柄失败");
 
 #ifdef DEBUG_STRING
-	printf("进程号码 : %8x \n", (unsigned int)process_id);
-	printf("进程句柄 : %8x \n", (unsigned int)process_handle);
+	printf("ProcessID : %8x \n", (unsigned int)process_id);
+	printf("ProcessHandle : %8x \n", (unsigned int)process_handle);
 	printf("\n");
 #endif // DEBUG_STRING
 
