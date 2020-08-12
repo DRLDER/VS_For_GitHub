@@ -382,7 +382,7 @@ void CheatDoing()
 
 	render_player_box(Players);
 
-	if (get_mouse_left_down())AimbotPlayers(Players,90);
+	if (get_mouse_left_down())AimbotPlayers(Players,50);
 }
 
 
