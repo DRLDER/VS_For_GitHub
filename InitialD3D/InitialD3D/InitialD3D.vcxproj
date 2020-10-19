@@ -21,7 +21,7 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{9d794888-92ae-42b2-98db-67293a4401dc}</ProjectGuid>
+    <ProjectGuid>{bf27f198-a44e-45cb-8720-59305f994a20}</ProjectGuid>
     <RootNamespace>InitialD3D</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
@@ -86,10 +86,8 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <EnableEnhancedInstructionSet>NotSet</EnableEnhancedInstructionSet>
-      <FloatingPointModel>Precise</FloatingPointModel>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -115,9 +113,9 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
-      <SDLCheck>false</SDLCheck>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <ConformanceMode>false</ConformanceMode>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -141,7 +139,15 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Initial_D3D.cpp" />
+    <ClInclude Include="C:\Users\83644\Desktop\D3D_Base\d3dApp.h" />
+    <ClInclude Include="C:\Users\83644\Desktop\D3D_Base\d3dUtil.h" />
+    <ClInclude Include="C:\Users\83644\Desktop\D3D_Base\GameTimer.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="C:\Users\83644\Desktop\D3D_Base\d3dApp.cpp" />
+    <ClCompile Include="C:\Users\83644\Desktop\D3D_Base\d3dUtil.cpp" />
+    <ClCompile Include="C:\Users\83644\Desktop\D3D_Base\GameTimer.cpp" />
+    <ClCompile Include="Initial D3D.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

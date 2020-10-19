@@ -15,7 +15,27 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Initial_D3D.cpp">
+    <ClInclude Include="C:\Users\83644\Desktop\D3D_Base\d3dApp.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\83644\Desktop\D3D_Base\d3dUtil.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\83644\Desktop\D3D_Base\GameTimer.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="C:\Users\83644\Desktop\D3D_Base\d3dApp.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\83644\Desktop\D3D_Base\d3dUtil.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\83644\Desktop\D3D_Base\GameTimer.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Initial D3D.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
