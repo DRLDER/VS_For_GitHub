@@ -1,0 +1,26 @@
+﻿@{
+    ViewBag.Title = "TestFunc";
+}
+
+<h2>Test</h2>
+<content>@ViewBag.Message</content>
+
+@using WebApplicationmvcTest.Models;
+
+
+@{
+
+    var list = ViewData["data"] as List<modtest>;
+}
+
+<h2>Test trans Data across ViewData</h2>
+<div class="jumbotron">
+
+    @foreach (var item in list)
+    {
+        <div>
+            ID:@item.ID&nbsp;&nbsp;Name:@item.Name&nbsp;&nbsp;Age:@item.Age&nbsp;&nbsp;Sex:@item.Sex&nbsp;&nbsp;Email:@item.Email
+        </div>
+    }
+    <content>@ViewData["1"]</content>
+</div>
